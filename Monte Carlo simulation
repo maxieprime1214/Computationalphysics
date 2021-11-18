@@ -1,0 +1,43 @@
+# Monte Carlo simulation of an ideal gas - Example 10.3 of Computational Physics by Newman
+
+N= 1000
+L = 1.0
+beta = 0.1
+m = h = 1.0
+nx = nx = nz = 1.0
+moves = 250000
+
+E = np.ones((N,4))
+E.transpose()[0] = 14.804406601634037
+E.transpose()[1] = E.transpose()[2] = E.transpose()[3] = 1  
+
+Esum = []
+
+for step in range(moves):
+    
+        
+    sign = randrange(0,2)
+    qnum = randrange(1,4)
+    E_num = randrange(0,N)
+    
+    if sign == 1:
+        
+        dE = (pi**2*h**2)/(2*m*L**2)*(2*E[E_num][qnum]+1)
+        
+        if random() < exp(-beta*dE):
+            
+            E[E_num][0] += dE
+            E[E_num][qnum] +=1
+        
+    if sign == 0 and E[E_num][qnum]-1 > 0:
+        
+        dE = (pi**2*h**2)/(2*m*L**2)*(-2*E[E_num][qnum]+1)
+        
+        if random() < exp(-beta*dE):
+            
+            E[E_num][0] += dE
+            E[E_num][qnum] -=1
+        
+    Esum.append(sum(E.transpose()[0]))
+    
+    plt.plot(Esum)
