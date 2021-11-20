@@ -1,0 +1,12 @@
+# Relaxation method of solving non-linear equations
+
+def relax(x):
+
+    val = np.linspace(x-10,x+10,2000)      # vector of values to try
+    
+    for num in val:
+        
+        if abs(num - (2-exp(-num))) <.01:   # left side of eqn minus right side of eqn < threshold
+            
+            print("The value x is:",num)
+        
