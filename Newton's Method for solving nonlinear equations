@@ -1,0 +1,42 @@
+def Newt(x):  # Uses Newton's Method to solve two simultaneous non-linear equations
+    
+    # Based on the problem on pg. 277 of Computational Physics by Newman
+    
+    Vplus = 5.0
+    R1 = 1000.0
+    R2 = 4000.0
+    R3 = 3000.0
+    R4 = 2000.0
+    I0 = 3e-9
+    VT = .05
+    N=1000
+
+    def f(x):     # outputs the results of the two Kirchhoff's current law equations for 
+                  # voltages V1, V2
+
+        fx1 = (x[0]-Vplus)/R1 + x[0]/R2 + I0*((exp((x[0]-x[1])/VT)) - 1)
+        fx2 = (x[1]-Vplus)/R3 +x[1]/R4 - I0*((exp((x[0]-x[1])/VT)) - 1)
+
+        return fx1,fx2
+
+    def f_jacob(x):  # calculates the Jacobian of the two equations
+
+        return np.array([[1/800+6e-8*exp((x[0]-x[1])/VT), 
+                          -6e-8*exp((x[0]-x[1])/VT)],
+                         [-6e-8*exp((x[0]-x[1])/VT),6e-8*exp((x[0]-x[1])/VT)+1/1200]])
+
+   
+    oldvals = x
+
+    for i in range(N):      # Applies Newton's method
+        
+        dx = la.solve(f_jacob(oldvals),f(oldvals))   # solves the eqn of the form Ax =b
+                                                     # where A is the Jacobian and b is
+                                                     # the output of the function f(x)
+        
+        
+        newvals = oldvals - dx
+                
+        oldvals = newvals
+    
+    return oldvals                                   # returns voltages V1 and V2
